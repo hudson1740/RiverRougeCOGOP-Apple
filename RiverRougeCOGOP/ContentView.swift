@@ -26,7 +26,7 @@ struct ContentView: View {
                     HStack {
                         Spacer()
                         Button(action: { /* settings */ }) {
-                            Image("bluegear").resizable().frame(width: 45, height: 45)
+                            Image("bluegear").resizable().frame(width: 35, height: 35)
                         }.padding()
                     }
                     .background(Color.black)
@@ -69,9 +69,17 @@ struct ContentView: View {
                         })
                         
                         GridButton(title: "Bible", icon: "book.fill", action: {
-                            if UIApplication.shared.canOpenURL(URL(string: "https://apps.apple.com/us/app/bible/id282935706")!) {
-                                if let url = URL(string: "https://apps.apple.com/us/app/bible/id282935706") { UIApplication.shared.open(url) }
-                            } else { showingBibleLink = true }
+                            // Attempt to open the YouVersion Bible app using its URL scheme
+                            if let appURL = URL(string: "youversion://") {
+                                if UIApplication.shared.canOpenURL(appURL) {
+                                    UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
+                                } else {
+                                    // If the app isn't installed, redirect to the App Store using the app's ID
+                                    if let appStoreURL = URL(string: "https://apps.apple.com/us/app/bible/id282935706") {
+                                        UIApplication.shared.open(appStoreURL, options: [:], completionHandler: nil)
+                                    }
+                                }
+                            }
                         })
                         
                         GridButton(title: "Location", icon: "map.fill", action: {
@@ -127,7 +135,7 @@ struct ContentView: View {
                             .lineLimit(2)
                             .truncationMode(.tail)
                             .padding()
-                            .frame(maxWidth: .infinity, minHeight: 80)
+                            .frame(maxWidth: .infinity, minHeight: 90)
                             .onTapGesture {
                                 showingFullScripture = true
                             }
@@ -170,7 +178,7 @@ struct ContentView: View {
                             .shadow(radius: 10)
                             .padding(.horizontal)
                         }
-                        .presentationDetents([.medium, .large])
+                        .presentationDetents([.medium, .large, .height(250)])
                         .presentationDragIndicator(.visible)
                     }
 
