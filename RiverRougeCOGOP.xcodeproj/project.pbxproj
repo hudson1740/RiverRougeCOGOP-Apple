@@ -6,13 +6,31 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		0669BEC62DA9BE17001D3E0E /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0669BEC52DA9BE17001D3E0E /* AVKit.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		06122B862D9BB3E8000F0D74 /* RiverRougeCOGOP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RiverRougeCOGOP.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0669BEC52DA9BE17001D3E0E /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		0669BED12DA9C253001D3E0E /* Exceptions for "RiverRougeCOGOP" folder in "RiverRougeCOGOP" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 06122B852D9BB3E8000F0D74 /* RiverRougeCOGOP */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		06122B882D9BB3E8000F0D74 /* RiverRougeCOGOP */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				0669BED12DA9C253001D3E0E /* Exceptions for "RiverRougeCOGOP" folder in "RiverRougeCOGOP" target */,
+			);
 			path = RiverRougeCOGOP;
 			sourceTree = "<group>";
 		};
@@ -23,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0669BEC62DA9BE17001D3E0E /* AVKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +52,7 @@
 			isa = PBXGroup;
 			children = (
 				06122B882D9BB3E8000F0D74 /* RiverRougeCOGOP */,
+				0669BEC42DA9BE0A001D3E0E /* Frameworks */,
 				06122B872D9BB3E8000F0D74 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +63,14 @@
 				06122B862D9BB3E8000F0D74 /* RiverRougeCOGOP.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		0669BEC42DA9BE0A001D3E0E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0669BEC52DA9BE17001D3E0E /* AVKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -259,6 +287,7 @@
 				DEVELOPMENT_TEAM = 85R775VYBS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RiverRougeCOGOP/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "River Rouge COGOP";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -294,6 +323,7 @@
 				DEVELOPMENT_TEAM = 85R775VYBS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RiverRougeCOGOP/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "River Rouge COGOP";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
