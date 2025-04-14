@@ -1,16 +1,16 @@
 [
     {
         "id": "1",
-        "title": "Sunday Service",
-        "body": "Join us at 11 AM",
-        "date": "Sunday",
+        "title": "Sunday Service Update",
+        "body": "Join us at 10 AM for a special guest speaker!",
+        "date": "2025-04-14T10:00:00Z",
         "priority": 1
     },
     {
         "id": "2",
-        "title": "Bible  Study",
-        "body": "Wednesday at 6 PM.",
-        "date": "Wednesday",
+        "title": "Prayer Meeting",
+        "body": "Wednesday at 7 PM in the chapel.",
+        "date": "2025-04-16T19:00:00Z",
         "priority": 2
     }
 ]
