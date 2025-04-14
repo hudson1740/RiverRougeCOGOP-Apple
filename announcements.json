@@ -1,0 +1,16 @@
+[
+    {
+        "id": "1",
+        "title": "Sunday Service",
+        "body": "Join us at 11 AM",
+        "date": "Sunday",
+        "priority": 1
+    },
+    {
+        "id": "2",
+        "title": "Bible  Study",
+        "body": "Wednesday at 6 PM.",
+        "date": "Wednesday",
+        "priority": 2
+    }
+]
