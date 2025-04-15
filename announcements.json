@@ -1,0 +1,44 @@
+[
+    {
+        "id": "1",
+        "title": "Sunday School",
+        "body": "Join us at 11 AM every Sunday",
+        "timeInfo": "Sunday 11 AM",
+        "priority": 1
+    },
+    {
+        "id": "2",
+        "title": "Sunday Service",
+        "body": "Join us at 12PM every Sunday",
+        "timeInfo": "Sunday 12PM",
+        "priority": 2
+    },
+    {
+        "id": "3",
+        "title": "Bible Study",
+        "body": "Join us for Bible Study!",
+        "timeInfo": "Wednesday 6PM",
+        "priority": 3
+    },
+    {
+        "id": "4",
+        "title": "Good Friday Service",
+        "body": "Join our annual Good Friday Service",
+        "timeInfo": "April 18th",
+        "priority": 4
+    },
+    {
+        "id": "5",
+        "title": "Woman's Conference",
+        "body": "",
+        "timeInfo": "May 30 - June 1st",
+        "priority": 5
+    },
+    {
+        "id": "6",
+        "title": "Great Lakes Regional Convention",
+        "body": "Westland, Indiana",
+        "timeInfo": "June 27 - June 29",
+        "priority": 6
+    }
+]
