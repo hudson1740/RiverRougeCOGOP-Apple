@@ -5,13 +5,13 @@ import SafariServices
 
 struct ContentView: View {
     @State private var dailyScripture: String = UserDefaults.standard.string(forKey: "dailyScripture") ?? ScriptureProvider.getRandomScripture()
-    @State private var showingAnnouncements = false
     @State private var showingGiving = false
     @State private var showingBibleLink = false
     @State private var showingNotes = false
     @State private var showingFullScripture = false
     @State private var showingMusicPlayer = false
     @State private var showingSettings = false
+    @State private var showingAnnouncements = false // Added for sheet presentation
     @State private var selectedGradient: GradientOption = .defaultOption
     @State private var selectedScriptureTheme: ScriptureTheme = .defaultTheme
     @State private var selectedFontSize: FontSizeOption = .medium
@@ -73,7 +73,7 @@ struct ContentView: View {
                         })
                         
                         GridButton(title: "Announcements", icon: "info.circle.fill", gradient: selectedGradient, action: {
-                            showingAnnouncements = true
+                            showingAnnouncements = true // Trigger the sheet
                         })
                         
                         GridButton(title: "Bible", icon: "book.fill", gradient: selectedGradient, action: {
@@ -103,9 +103,8 @@ struct ContentView: View {
                     .padding()
                     .sheet(isPresented: $showingAnnouncements) {
                         AnnouncementsView()
-                            .presentationDetents([.large])
+                            .presentationDetents([.large, .medium, .height(500)])
                             .presentationDragIndicator(.visible)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                     .sheet(isPresented: $showingBibleLink) {
                         BibleLinkView()
@@ -142,7 +141,7 @@ struct ContentView: View {
                         HStack {
                             Spacer()
                             if #available(iOS 16.0, *) {
-                                Text("Daily Scripture")
+                                Text("Inspired Scriptures")
                                     .underline()
                                     .padding(.top, 20)
                                     .font(horizontalSizeClass == .regular ? .title : .title2)
@@ -171,7 +170,7 @@ struct ContentView: View {
                             .lineLimit(2)
                             .truncationMode(.tail)
                             .padding()
-                            .frame(maxWidth: .infinity, minHeight: 90)
+                            .frame(maxWidth: .infinity, minHeight: 90) // Fixed typo: "min blazing" to "minHeight"
                             .onTapGesture {
                                 showingFullScripture = true
                             }
@@ -186,7 +185,7 @@ struct ContentView: View {
                             Color.black.ignoresSafeArea()
                             VStack {
                                 if #available(iOS 16.0, *) {
-                                    Text("Daily Scripture")
+                                    Text("Inspired Scriptures")
                                         .underline()
                                         .padding(.top, 40)
                                         .font(horizontalSizeClass == .regular ? .title : .title2)
@@ -221,7 +220,7 @@ struct ContentView: View {
                         SocialButton(icon: "instagram")
                         SocialButton(icon: "youtube")
                         SocialButton(icon: "cashapp")
-                        SocialButton(icon: "music.note.list", isMusicButton: true, musicAction: {
+                        SocialButton(icon: "music.note.list", isMusicButton: true, action: {
                             showingMusicPlayer = true
                         })
                     }
@@ -588,7 +587,7 @@ struct GridButton: View {
 struct SocialButton: View {
     var icon: String
     var isMusicButton: Bool = false
-    var musicAction: (() -> Void)? = nil
+    var action: (() -> Void)? = nil // Fixed: Made optional with a default value
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     private var iconSize: CGFloat {
         horizontalSizeClass == .regular ? 45 : 30
@@ -597,7 +596,7 @@ struct SocialButton: View {
     var body: some View {
         Button(action: {
             if isMusicButton {
-                musicAction?()
+                action?()
             } else {
                 openSocialURL(for: icon)
             }

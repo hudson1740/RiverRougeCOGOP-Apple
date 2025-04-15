@@ -1,9 +1,8 @@
-// RiverRougeCOGOPApp.swift
-
+// ChurchAppApp.swift
 import SwiftUI
 
 @main
-struct RiverRougeCOGOPApp: App {
+struct ChurchAppApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

@@ -1,0 +1,10 @@
+platform :ios, '14.0'
+
+project 'RiverRougeCOGOP.xcodeproj'
+
+target 'RiverRougeCOGOP' do
+  use_frameworks!
+  pod 'Firebase/Core'
+  pod 'Firebase/Firestore'
+  pod 'FirebaseFirestoreSwift'
+end

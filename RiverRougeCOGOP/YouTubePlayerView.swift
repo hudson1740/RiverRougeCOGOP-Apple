@@ -11,32 +11,31 @@ class YouTubePlayerManager: NSObject, ObservableObject {
     @Published var error: Error?
     @Published var hasPlaybackError = false
     @Published var isPlaying = false
-    @Published var userPaused = false // Track user-initiated pauses
+    @Published var userPaused = false
     private var webView: WKWebView
     private var containerView: UIView
     private var enableBackgroundMusic: Bool = false
+    private var isLoadingInProgress = false // Track if a load operation is in progress
 
     static let shared = YouTubePlayerManager()
 
     private override init() {
         let configuration = WKWebViewConfiguration()
         configuration.allowsInlineMediaPlayback = true
-        configuration.mediaTypesRequiringUserActionForPlayback = [] // Allow autoplay without user gesture
+        configuration.mediaTypesRequiringUserActionForPlayback = []
         self.webView = WKWebView(frame: .zero, configuration: configuration)
         self.webView.scrollView.isScrollEnabled = false
         self.containerView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
-        self.containerView.isHidden = false // Ensure container is not hidden to prevent playback suspension
+        self.containerView.isHidden = false
         super.init()
         self.webView.navigationDelegate = self
 
-        // Add WebView to container
         self.webView.frame = self.containerView.bounds
         self.containerView.addSubview(self.webView)
 
-        // Add container to the root view controller's view hierarchy
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let rootViewController = windowScene.windows.first?.rootViewController {
-            self.containerView.frame = CGRect(x: 0, y: 0, width: 1, height: 1) // Minimal size
+            self.containerView.frame = CGRect(x: 0, y: 0, width: 1, height: 1)
             rootViewController.view.addSubview(self.containerView)
             print("Added containerView to root view controller")
         } else {
@@ -82,14 +81,29 @@ class YouTubePlayerManager: NSObject, ObservableObject {
     }
 
     func loadVideo(videoId: String, shouldPlay: Bool = false) {
-        guard !videoId.isEmpty else { return }
+        // Prevent concurrent loads
+        guard !isLoadingInProgress else {
+            print("Load video skipped: Another load is already in progress for video ID: \(videoId)")
+            return
+        }
+        guard !videoId.isEmpty else {
+            print("Load video failed: Video ID is empty")
+            DispatchQueue.main.async {
+                self.isLoadingVideo = false
+                self.hasPlaybackError = true
+                self.isPlaying = false
+                self.userPaused = true
+            }
+            return
+        }
+
+        self.isLoadingInProgress = true
         self.selectedVideoId = videoId
         self.isLoadingVideo = true
         self.hasPlaybackError = false
         self.isPlaying = shouldPlay
         self.userPaused = !shouldPlay
 
-        // Embed HTML with script to monitor playback state
         let embedHTML = """
         <html>
         <body style="margin:0">
@@ -103,12 +117,14 @@ class YouTubePlayerManager: NSObject, ObservableObject {
                             \(shouldPlay ? "event.target.playVideo();" : "")
                         },
                         'onStateChange': function(event) {
-                            // Notify Swift of state changes
                             if (event.data === YT.PlayerState.PLAYING) {
                                 window.webkit.messageHandlers.playbackState.postMessage("playing");
                             } else if (event.data === YT.PlayerState.PAUSED) {
                                 window.webkit.messageHandlers.playbackState.postMessage("paused");
                             }
+                        },
+                        'onError': function(event) {
+                            window.webkit.messageHandlers.playbackState.postMessage("error-" + event.data);
                         }
                     }
                 });
@@ -120,14 +136,12 @@ class YouTubePlayerManager: NSObject, ObservableObject {
         """
         print("Loading video ID: \(videoId), shouldPlay: \(shouldPlay)")
         self.webView.loadHTMLString(embedHTML, baseURL: nil)
-
-        // Add script message handler for playback state
         self.webView.configuration.userContentController.add(self, name: "playbackState")
     }
 
     func pauseVideo() {
         guard isPlaying else { return }
-        self.userPaused = true // Mark as user-initiated pause
+        self.userPaused = true
         self.webView.evaluateJavaScript("player.pauseVideo()") { result, error in
             if let error = error {
                 print("Failed to pause video: \(error.localizedDescription)")
@@ -140,7 +154,7 @@ class YouTubePlayerManager: NSObject, ObservableObject {
 
     func playVideo() {
         guard !isPlaying else { return }
-        self.userPaused = false // Clear user-initiated pause
+        self.userPaused = false
         self.webView.evaluateJavaScript("player.playVideo()") { result, error in
             if let error = error {
                 print("Failed to play video: \(error.localizedDescription)")
@@ -191,6 +205,7 @@ extension YouTubePlayerManager: WKNavigationDelegate, WKScriptMessageHandler {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         DispatchQueue.main.async {
             self.isLoadingVideo = false
+            self.isLoadingInProgress = false
             print("WebView finished loading video ID: \(self.selectedVideoId ?? "unknown"), Playback state: \(self.isPlaying ? "Playing" : "Paused")")
         }
     }
@@ -198,6 +213,7 @@ extension YouTubePlayerManager: WKNavigationDelegate, WKScriptMessageHandler {
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         DispatchQueue.main.async {
             self.isLoadingVideo = false
+            self.isLoadingInProgress = false
             self.hasPlaybackError = true
             self.isPlaying = false
             self.userPaused = true
@@ -208,6 +224,7 @@ extension YouTubePlayerManager: WKNavigationDelegate, WKScriptMessageHandler {
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         DispatchQueue.main.async {
             self.isLoadingVideo = false
+            self.isLoadingInProgress = false
             self.hasPlaybackError = true
             self.isPlaying = false
             self.userPaused = true
@@ -219,7 +236,6 @@ extension YouTubePlayerManager: WKNavigationDelegate, WKScriptMessageHandler {
         print("WebView started loading video ID: \(self.selectedVideoId ?? "unknown")")
     }
 
-    // Handle playback state messages from JavaScript
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard message.name == "playbackState", let state = message.body as? String else { return }
         print("Received playback state from JavaScript: \(state), isPlaying: \(isPlaying), userPaused: \(userPaused), enableBackgroundMusic: \(enableBackgroundMusic)")
@@ -229,7 +245,6 @@ extension YouTubePlayerManager: WKNavigationDelegate, WKScriptMessageHandler {
             self.isPlaying = true
             self.userPaused = false
         case "paused":
-            // Only resume if the pause was not user-initiated and background music is enabled
             if isPlaying && !userPaused && enableBackgroundMusic {
                 print("Video paused unexpectedly (not user-initiated) while background music is enabled - Resuming playback")
                 self.webView.evaluateJavaScript("player.playVideo()") { result, error in
@@ -243,6 +258,16 @@ extension YouTubePlayerManager: WKNavigationDelegate, WKScriptMessageHandler {
                 self.isPlaying = false
                 print("Video paused - Not resuming (userPaused: \(userPaused))")
             }
+        case let errorState where errorState.starts(with: "error-"):
+            let errorCode = errorState.replacingOccurrences(of: "error-", with: "")
+            DispatchQueue.main.async {
+                self.isLoadingVideo = false
+                self.isLoadingInProgress = false
+                self.hasPlaybackError = true
+                self.isPlaying = false
+                self.userPaused = true
+                print("YouTube player error for video ID: \(self.selectedVideoId ?? "unknown") - Error code: \(errorCode)")
+            }
         default:
             break
         }
@@ -252,6 +277,7 @@ extension YouTubePlayerManager: WKNavigationDelegate, WKScriptMessageHandler {
 struct YouTubePlayerView: View {
     @ObservedObject private var manager = YouTubePlayerManager.shared
     @Environment(\.dismiss) var dismiss
+    @State private var lastTappedTime: Date? // For debouncing
 
     var body: some View {
         ZStack {
@@ -318,7 +344,6 @@ struct YouTubePlayerView: View {
                             .cornerRadius(10)
                             .padding()
                         } else {
-                            // Play/pause button overlay
                             VStack {
                                 Spacer()
                                 HStack {
@@ -347,6 +372,13 @@ struct YouTubePlayerView: View {
                         LazyVStack(spacing: 10) {
                             ForEach(manager.videos) { item in
                                 Button(action: {
+                                    // Debounce: Ignore taps within 0.5 seconds of the last tap
+                                    let now = Date()
+                                    if let lastTap = lastTappedTime, now.timeIntervalSince(lastTap) < 0.5 {
+                                        print("Tap ignored - Too soon after last tap")
+                                        return
+                                    }
+                                    lastTappedTime = now
                                     manager.loadVideo(videoId: item.snippet.resourceId.videoId, shouldPlay: true)
                                 }) {
                                     HStack {
@@ -402,7 +434,7 @@ struct YouTubeWebPlayer: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
-        // WebView is managed by YouTubePlayerManager, no need to reload here
+        // WebView is managed by YouTubePlayerManager
     }
 }
 
