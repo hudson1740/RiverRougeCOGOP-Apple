@@ -1,4 +1,3 @@
-// AnnouncementsView.swift
 import SwiftUI
 
 struct AnnouncementsView: View {
@@ -9,25 +8,28 @@ struct AnnouncementsView: View {
     @State private var lastRefreshTime: Date?
 
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                Color.black.ignoresSafeArea()
+        ZStack {
+            Color.black.ignoresSafeArea()
 
-                VStack {
-                    titleView
-                    contentView
-                        .frame(minHeight: geometry.size.height - 100)
-                    Spacer()
-                }
-                .background(backgroundGradient)
-                .cornerRadius(15)
-                .shadow(radius: 10)
-                .padding(.horizontal)
+            VStack {
+                titleView
+                contentView
+                Spacer()
             }
-            .onAppear {
-                print("AnnouncementsView appeared, fetching data...")
-                errorMessage = nil
-                viewModel.fetchAnnouncements()
+            .background(backgroundGradient)
+            .cornerRadius(15)
+            .shadow(radius: 10)
+            .padding(.horizontal)
+        }
+        .onAppear {
+            print("AnnouncementsView appeared, fetching data...")
+            errorMessage = nil
+            viewModel.fetchAnnouncements()
+        }
+        .onChange(of: viewModel.announcements) { newAnnouncements in
+            print("Announcements updated: \(newAnnouncements.count) items loaded")
+            for announcement in newAnnouncements {
+                print("Announcement: \(announcement.title), Priority: \(announcement.priority)")
             }
         }
     }

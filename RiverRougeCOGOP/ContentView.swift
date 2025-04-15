@@ -1,22 +1,20 @@
-// ContentView.swift
 import SwiftUI
 import MapKit
 import SafariServices
 
 struct ContentView: View {
-    @State private var dailyScripture: String = UserDefaults.standard.string(forKey: "dailyScripture") ?? ScriptureProvider.getRandomScripture()
+    @State private var dailyScripture: ScriptureProvider.Scripture = loadScriptureFromUserDefaults() ?? ScriptureProvider.getRandomScripture()
     @State private var showingGiving = false
     @State private var showingBibleLink = false
     @State private var showingNotes = false
     @State private var showingFullScripture = false
     @State private var showingMusicPlayer = false
     @State private var showingSettings = false
-    @State private var showingAnnouncements = false // Added for sheet presentation
+    @State private var showingAnnouncements = false
+    @State private var showingBiographies = false
     @State private var selectedGradient: GradientOption = .defaultOption
     @State private var selectedScriptureTheme: ScriptureTheme = .defaultTheme
     @State private var selectedFontSize: FontSizeOption = .medium
-    @State private var selectedRefreshFrequency: ScriptureRefreshFrequency = .onLaunch
-    @State private var refreshTimer: Timer? = nil
 
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
@@ -30,7 +28,17 @@ struct ContentView: View {
                 VStack(spacing: 0) {
                     // Toolbar
                     HStack {
+                        Button(action: {
+                            showingBiographies = true
+                        }) {
+                            Image(systemName: "person.fill")
+                                .resizable()
+                                .frame(width: 25, height: 25)
+                                .foregroundColor(.white)
+                        }.padding()
+                        
                         Spacer()
+                        
                         Button(action: {
                             showingSettings = true
                         }) {
@@ -73,7 +81,7 @@ struct ContentView: View {
                         })
                         
                         GridButton(title: "Announcements", icon: "info.circle.fill", gradient: selectedGradient, action: {
-                            showingAnnouncements = true // Trigger the sheet
+                            showingAnnouncements = true
                         })
                         
                         GridButton(title: "Bible", icon: "book.fill", gradient: selectedGradient, action: {
@@ -103,25 +111,21 @@ struct ContentView: View {
                     .padding()
                     .sheet(isPresented: $showingAnnouncements) {
                         AnnouncementsView()
-                            .presentationDetents([.large, .medium, .height(500)])
-                            .presentationDragIndicator(.visible)
+                            .presentationDetents([.large, .medium])
                     }
                     .sheet(isPresented: $showingBibleLink) {
                         BibleLinkView()
                             .presentationDetents([.large])
-                            .presentationDragIndicator(.visible)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                     .sheet(isPresented: $showingGiving) {
                         GivingView()
                             .presentationDetents([.large])
-                            .presentationDragIndicator(.visible)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                     .sheet(isPresented: $showingNotes) {
                         NotesView()
                             .presentationDetents([.large])
-                            .presentationDragIndicator(.visible)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
                     .sheet(isPresented: $showingSettings) {
@@ -129,14 +133,17 @@ struct ContentView: View {
                             selectedGradient: $selectedGradient,
                             selectedScriptureTheme: $selectedScriptureTheme,
                             selectedFontSize: $selectedFontSize,
-                            selectedRefreshFrequency: $selectedRefreshFrequency
+                            selectedRefreshFrequency: .constant(.onLaunch)
                         )
-                        .presentationDetents([.medium, .large, .height(450)])
-                        .presentationDragIndicator(.visible)
+                        .presentationDetents([.medium, .large])
+                    }
+                    .sheet(isPresented: $showingBiographies) {
+                        BiographiesView()
+                            .presentationDetents([.large])
                     }
                     Spacer()
 
-                    // Daily Verse Section
+                    // Inspired Scriptures Section
                     VStack {
                         HStack {
                             Spacer()
@@ -147,39 +154,47 @@ struct ContentView: View {
                                     .font(horizontalSizeClass == .regular ? .title : .title2)
                                     .fontWeight(.bold)
                                     .foregroundColor(.white)
-                            } else { /* Fallback */ }
-                            if selectedRefreshFrequency == .manual {
-                                Spacer()
-                                Button(action: {
-                                    dailyScripture = ScriptureProvider.getRandomScripture()
-                                    saveScriptureState()
-                                }) {
-                                    Image(systemName: "arrow.clockwise")
-                                        .foregroundColor(.white)
-                                        .padding(.top, 20)
-                                        .padding(.trailing, 10)
-                                }
                             } else {
-                                Spacer()
+                                Text("Inspired Scriptures")
+                                    .padding(.top, 20)
+                                    .font(horizontalSizeClass == .regular ? .title : .title2)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.white)
                             }
+                            Spacer()
                         }
-                        Text(dailyScripture)
+                        Text(dailyScripture.text)
                             .font(selectedFontSize.fontForMain(horizontalSizeClass: horizontalSizeClass))
-                            .foregroundColor(.white.opacity(0.9))
+                            .foregroundColor(.white.opacity(0.9)) // Verse text remains white
                             .multilineTextAlignment(.center)
                             .lineLimit(2)
                             .truncationMode(.tail)
-                            .padding()
-                            .frame(maxWidth: .infinity, minHeight: 90) // Fixed typo: "min blazing" to "minHeight"
-                            .onTapGesture {
-                                showingFullScripture = true
-                            }
+                            .padding(.horizontal)
+                            .padding(.top, 5)
+                        if let urlString = dailyScripture.youVersionURL, let url = URL(string: urlString) {
+                            Link(dailyScripture.reference, destination: url)
+                                .font(selectedFontSize.fontForMain(horizontalSizeClass: horizontalSizeClass).weight(.bold))
+                                .foregroundColor(.yellow) // Reference text in yellow
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal)
+                                .padding(.bottom, 5)
+                        } else {
+                            Text(dailyScripture.reference)
+                                .font(selectedFontSize.fontForMain(horizontalSizeClass: horizontalSizeClass).weight(.bold))
+                                .foregroundColor(.gray)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal)
+                                .padding(.bottom, 5)
+                        }
                     }
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, minHeight: 90)
                     .background(selectedScriptureTheme.gradient)
                     .cornerRadius(15)
                     .shadow(radius: 10)
                     .padding(.horizontal)
+                    .onTapGesture {
+                        showingFullScripture = true
+                    }
                     .sheet(isPresented: $showingFullScripture) {
                         ZStack {
                             Color.black.ignoresSafeArea()
@@ -191,13 +206,35 @@ struct ContentView: View {
                                         .font(horizontalSizeClass == .regular ? .title : .title2)
                                         .fontWeight(.bold)
                                         .foregroundColor(.white)
-                                } else { /* Fallback */ }
+                                } else {
+                                    Text("Inspired Scriptures")
+                                        .padding(.top, 40)
+                                        .font(horizontalSizeClass == .regular ? .title : .title2)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.white)
+                                }
                                 ScrollView {
-                                    Text(dailyScripture)
+                                    Text(dailyScripture.text)
                                         .font(selectedFontSize.fontForModal(horizontalSizeClass: horizontalSizeClass))
-                                        .foregroundColor(.white.opacity(0.9))
+                                        .foregroundColor(.white.opacity(0.9)) // Verse text remains white
                                         .multilineTextAlignment(.center)
-                                        .padding()
+                                        .padding(.horizontal)
+                                        .padding(.top, 5)
+                                    if let urlString = dailyScripture.youVersionURL, let url = URL(string: urlString) {
+                                        Link(dailyScripture.reference, destination: url)
+                                            .font(selectedFontSize.fontForModal(horizontalSizeClass: horizontalSizeClass).weight(.bold))
+                                            .foregroundColor(.yellow) // Reference text in yellow
+                                            .multilineTextAlignment(.center)
+                                            .padding(.horizontal)
+                                            .padding(.bottom, 5)
+                                    } else {
+                                        Text(dailyScripture.reference)
+                                            .font(selectedFontSize.fontForModal(horizontalSizeClass: horizontalSizeClass).weight(.bold))
+                                            .foregroundColor(.gray)
+                                            .multilineTextAlignment(.center)
+                                            .padding(.horizontal)
+                                            .padding(.bottom, 5)
+                                    }
                                 }
                                 Spacer()
                             }
@@ -208,7 +245,6 @@ struct ContentView: View {
                             .padding(.horizontal)
                         }
                         .presentationDetents([.medium, .large, .height(250)])
-                        .presentationDragIndicator(.visible)
                     }
 
                     Spacer()
@@ -228,7 +264,6 @@ struct ContentView: View {
                     .sheet(isPresented: $showingMusicPlayer) {
                         YouTubePlayerView()
                             .presentationDetents([.large])
-                            .presentationDragIndicator(.visible)
                     }
 
                     Text("Developed by Brett: Brett Tech Networking")
@@ -241,12 +276,6 @@ struct ContentView: View {
                 loadGradientSelection()
                 loadScriptureThemeSelection()
                 loadFontSizeSelection()
-                loadRefreshFrequencySelection()
-                checkAndRefreshScripture()
-                setupRefreshTimer()
-            }
-            .onChange(of: selectedRefreshFrequency) { _ in
-                setupRefreshTimer()
             }
             .navigationBarHidden(true)
         }
@@ -294,72 +323,12 @@ struct ContentView: View {
         }
     }
 
-    func loadRefreshFrequencySelection() {
-        if let savedFrequencyName = UserDefaults.standard.string(forKey: "selectedRefreshFrequency"),
-           let savedFrequency = ScriptureRefreshFrequency(rawValue: savedFrequencyName) {
-            selectedRefreshFrequency = savedFrequency
-        } else {
-            selectedRefreshFrequency = .onLaunch
+    static func loadScriptureFromUserDefaults() -> ScriptureProvider.Scripture? {
+        guard let text = UserDefaults.standard.string(forKey: "dailyScriptureText"),
+              let reference = UserDefaults.standard.string(forKey: "dailyScriptureReference") else {
+            return nil
         }
-    }
-
-    func checkAndRefreshScripture() {
-        let now = Date()
-        let lastRefresh = UserDefaults.standard.double(forKey: "lastScriptureRefresh")
-        let lastRefreshDate = lastRefresh > 0 ? Date(timeIntervalSince1970: lastRefresh) : nil
-        var shouldRefresh = false
-
-        switch selectedRefreshFrequency {
-        case .onLaunch:
-            shouldRefresh = true // Always refresh on launch
-        case .hourly:
-            if let lastDate = lastRefreshDate {
-                let hoursSinceLastRefresh = now.timeIntervalSince(lastDate) / 3600
-                shouldRefresh = hoursSinceLastRefresh >= 1
-            } else {
-                shouldRefresh = true // First time, refresh
-            }
-        case .daily:
-            if let lastDate = lastRefreshDate {
-                let hoursSinceLastRefresh = now.timeIntervalSince(lastDate) / 3600
-                shouldRefresh = hoursSinceLastRefresh >= 24
-            } else {
-                shouldRefresh = true // First time, refresh
-            }
-        case .manual:
-            shouldRefresh = false // Only refresh manually
-        }
-
-        if shouldRefresh {
-            dailyScripture = ScriptureProvider.getRandomScripture()
-            saveScriptureState()
-        }
-    }
-
-    func saveScriptureState() {
-        UserDefaults.standard.set(dailyScripture, forKey: "dailyScripture")
-        UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "lastScriptureRefresh")
-        print("Saved scripture state: \(dailyScripture), last refresh: \(Date())")
-    }
-
-    func setupRefreshTimer() {
-        refreshTimer?.invalidate()
-        switch selectedRefreshFrequency {
-        case .hourly:
-            refreshTimer = Timer.scheduledTimer(withTimeInterval: 3600, repeats: true) { _ in
-                self.dailyScripture = ScriptureProvider.getRandomScripture()
-                self.saveScriptureState()
-                print("Hourly scripture refresh triggered")
-            }
-        case .daily:
-            refreshTimer = Timer.scheduledTimer(withTimeInterval: 24 * 3600, repeats: true) { _ in
-                self.dailyScripture = ScriptureProvider.getRandomScripture()
-                self.saveScriptureState()
-                print("Daily scripture refresh triggered")
-            }
-        default:
-            break // No timer for onLaunch or manual
-        }
+        return ScriptureProvider.Scripture(text: text, reference: reference)
     }
 }
 
@@ -368,7 +337,11 @@ struct BibleLinkView: View {
         VStack {
             Text("Open Bible App").font(.title).padding()
             Text("App not installed...").padding()
-            Button("Install from App Store") { /* Action */ }.padding()
+            Button("Install from App Store") {
+                if let appStoreURL = URL(string: "https://apps.apple.com/us/app/bible/id282935706") {
+                    UIApplication.shared.open(appStoreURL, options: [:], completionHandler: nil)
+                }
+            }.padding()
         }
     }
 }
@@ -587,7 +560,7 @@ struct GridButton: View {
 struct SocialButton: View {
     var icon: String
     var isMusicButton: Bool = false
-    var action: (() -> Void)? = nil // Fixed: Made optional with a default value
+    var action: (() -> Void)? = nil
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     private var iconSize: CGFloat {
         horizontalSizeClass == .regular ? 45 : 30

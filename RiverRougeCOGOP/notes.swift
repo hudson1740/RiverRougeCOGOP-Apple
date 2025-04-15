@@ -79,7 +79,7 @@ class NotesViewModel: ObservableObject {
 struct NotesView: View {
     @StateObject private var viewModel = NotesViewModel()
     @State private var searchText = ""
-    @State private var selectedCategory: UUID? = nil  // nil represents "All Notes"
+    @State private var selectedCategory: UUID? = nil
     @State private var newNoteText = ""
     @State private var showingNewNoteSheet = false
     @State private var editingNote: Note?
@@ -88,6 +88,9 @@ struct NotesView: View {
     @State private var showingFolderManager = false
     @State private var noteToMove: Note?
     @State private var showingMoveToFolderSheet = false
+    @State private var showingSettings = false
+    @State private var useRandomColors = true
+    @State private var staticColor: Color = .blue
 
     var filteredNotes: [Note] {
         let categoryFiltered: [Note]
@@ -117,15 +120,6 @@ struct NotesView: View {
     var body: some View {
         VStack {
             HStack {
-                Image(systemName: "magnifyingglass")
-                TextField("Search Notes...", text: $searchText)
-            }
-            .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(8)
-            .padding(.horizontal)
-
-            HStack {
                 Picker("Category", selection: $selectedCategory) {
                     Text("All Notes").tag(nil as UUID?)
                     ForEach(viewModel.folders) { folder in
@@ -140,13 +134,28 @@ struct NotesView: View {
                         .imageScale(.large)
                 }
                 .padding(.trailing)
+                
+                Button(action: { showingSettings = true }) {
+                    Image(systemName: "gearshape")
+                        .imageScale(.large)
+                }
+                .padding(.trailing)
             }
             .padding(.vertical, 5)
+
+            HStack {
+                Image(systemName: "magnifyingglass")
+                TextField("Search Notes...", text: $searchText)
+            }
+            .padding()
+            .background(Color(.systemGray6))
+            .cornerRadius(8)
+            .padding(.horizontal)
 
             ScrollView {
                 LazyVGrid(columns: [GridItem(.flexible(), spacing: 15), GridItem(.flexible(), spacing: 15)], spacing: 15) {
                     ForEach(filteredNotes) { note in
-                        NoteCardView(note: note)
+                        NoteCardView(note: note, useRandomColors: useRandomColors, staticColor: staticColor)
                             .onTapGesture { editingNote = note }
                             .contextMenu {
                                 Button {
@@ -229,6 +238,9 @@ struct NotesView: View {
                 }
             }
         }
+        .sheet(isPresented: $showingSettings) {
+            NoteSettings(useRandomColors: $useRandomColors, staticColor: $staticColor)
+        }
         .alert("Delete Note?", isPresented: $showingDeleteConfirmation, presenting: noteToDelete) { note in
             Button("Delete", role: .destructive) {
                 viewModel.notes.removeAll { $0.id == note.id }
@@ -244,6 +256,8 @@ struct NotesView: View {
 
 struct NoteCardView: View {
     let note: Note
+    let useRandomColors: Bool
+    let staticColor: Color
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -257,12 +271,13 @@ struct NoteCardView: View {
                 .frame(maxHeight: .infinity, alignment: .top)
             Spacer()
             Text(note.lastModified, style: .date)
+                .bold()
                 .font(.caption)
-                .foregroundColor(.gray)
+                .foregroundColor(.white)
         }
         .padding(10)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.randomNoteColor().opacity(0.7))
+        .background(useRandomColors ? Color.randomNoteColor().opacity(0.7) : staticColor.opacity(0.7))
         .cornerRadius(10)
         .shadow(color: Color.black.opacity(0.1), radius: 3, x: 1, y: 2)
     }
@@ -525,7 +540,6 @@ struct FolderManagerView: View {
                     notes[i].lastModified = Date()
                     print("Moved note '\(notes[i].title)' from '\(deletedFolderName)' to 'All Notes'")
                 }
-                // Save notes immediately after moving them
                 let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("notes.json")
                 do {
                     let encoder = JSONEncoder()
@@ -538,7 +552,7 @@ struct FolderManagerView: View {
                 }
             }
             if selectedCategory == folder.id {
-                selectedCategory = nil // Switch to "All Notes" if deleted folder was selected
+                selectedCategory = nil
                 print("Switched to 'All Notes' after deleting selected folder")
             }
             if folderToEdit?.id == folder.id { folderToEdit = nil }
@@ -640,13 +654,15 @@ extension Color {
 
     static func randomNoteColor() -> Color {
         let noteColors: [Color] = [
-            Color(hex: "d52600"), // Red
-            Color(hex: "0acb45"), // Green
-            Color(hex: "2900c0")  // Blueple
+            Color(hex: "EC0000"),
+            Color(hex: "14CA00"),
+            Color(hex: "0080FF"),
+            Color(hex: "FF33FF")
         ]
         return noteColors.randomElement() ?? Color.gray.opacity(0.3)
     }
 }
+
 struct NotesView_Previews: PreviewProvider {
     static var previews: some View {
         NotesView()
