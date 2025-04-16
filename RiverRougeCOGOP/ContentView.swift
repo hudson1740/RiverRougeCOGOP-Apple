@@ -1,5 +1,3 @@
-//ContentView.swift
-
 import SwiftUI
 import MapKit
 import SafariServices
@@ -17,6 +15,8 @@ struct ContentView: View {
     @State private var selectedGradient: GradientOption = .defaultOption
     @State private var selectedScriptureTheme: ScriptureTheme = .defaultTheme
     @State private var selectedFontSize: FontSizeOption = .medium
+    @State private var showingBible = false
+    @State private var selectedScriptureReference: String?
 
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
@@ -87,15 +87,7 @@ struct ContentView: View {
                         })
                         
                         GridButton(title: "Bible", icon: "book.fill", gradient: selectedGradient, action: {
-                            if let appURL = URL(string: "youversion://") {
-                                if UIApplication.shared.canOpenURL(appURL) {
-                                    UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
-                                } else {
-                                    if let appStoreURL = URL(string: "https://apps.apple.com/us/app/bible/id282935706") {
-                                        UIApplication.shared.open(appStoreURL, options: [:], completionHandler: nil)
-                                    }
-                                }
-                            }
+                            showingBible = true
                         })
                         
                         GridButton(title: "Location", icon: "map.fill", gradient: selectedGradient, action: {
@@ -143,6 +135,10 @@ struct ContentView: View {
                         BiographiesView()
                             .presentationDetents([.large])
                     }
+                    .sheet(isPresented: $showingBible) {
+                        BibleView(showingBible: $showingBible, initialSearch: selectedScriptureReference)
+                            .presentationDetents([.large])
+                    }
                     Spacer()
 
                     // Inspired Scriptures Section
@@ -167,23 +163,19 @@ struct ContentView: View {
                         }
                         Text(dailyScripture.text)
                             .font(selectedFontSize.fontForMain(horizontalSizeClass: horizontalSizeClass))
-                            .foregroundColor(.white.opacity(0.9)) // Verse text remains white
+                            .foregroundColor(.white.opacity(0.9))
                             .multilineTextAlignment(.center)
                             .lineLimit(2)
                             .truncationMode(.tail)
                             .padding(.horizontal)
                             .padding(.top, 5)
-                        if let urlString = dailyScripture.youVersionURL, let url = URL(string: urlString) {
-                            Link(dailyScripture.reference, destination: url)
-                                .font(selectedFontSize.fontForMain(horizontalSizeClass: horizontalSizeClass).weight(.bold))
-                                .foregroundColor(.yellow) // Reference text in yellow
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal)
-                                .padding(.bottom, 5)
-                        } else {
+                        Button(action: {
+                            selectedScriptureReference = dailyScripture.reference
+                            showingBible = true
+                        }) {
                             Text(dailyScripture.reference)
                                 .font(selectedFontSize.fontForMain(horizontalSizeClass: horizontalSizeClass).weight(.bold))
-                                .foregroundColor(.gray)
+                                .foregroundColor(.yellow)
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal)
                                 .padding(.bottom, 5)
@@ -218,21 +210,17 @@ struct ContentView: View {
                                 ScrollView {
                                     Text(dailyScripture.text)
                                         .font(selectedFontSize.fontForModal(horizontalSizeClass: horizontalSizeClass))
-                                        .foregroundColor(.white.opacity(0.9)) // Verse text remains white
+                                        .foregroundColor(.white.opacity(0.9))
                                         .multilineTextAlignment(.center)
                                         .padding(.horizontal)
                                         .padding(.top, 5)
-                                    if let urlString = dailyScripture.youVersionURL, let url = URL(string: urlString) {
-                                        Link(dailyScripture.reference, destination: url)
-                                            .font(selectedFontSize.fontForModal(horizontalSizeClass: horizontalSizeClass).weight(.bold))
-                                            .foregroundColor(.yellow) // Reference text in yellow
-                                            .multilineTextAlignment(.center)
-                                            .padding(.horizontal)
-                                            .padding(.bottom, 5)
-                                    } else {
+                                    Button(action: {
+                                        selectedScriptureReference = dailyScripture.reference
+                                        showingBible = true
+                                    }) {
                                         Text(dailyScripture.reference)
                                             .font(selectedFontSize.fontForModal(horizontalSizeClass: horizontalSizeClass).weight(.bold))
-                                            .foregroundColor(.gray)
+                                            .foregroundColor(.yellow)
                                             .multilineTextAlignment(.center)
                                             .padding(.horizontal)
                                             .padding(.bottom, 5)

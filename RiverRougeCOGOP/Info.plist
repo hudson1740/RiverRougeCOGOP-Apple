@@ -7,7 +7,6 @@
         <key>NSAllowsArbitraryLoads</key>
         <true/>
     </dict>
-    </array>
     <key>LSApplicationQueriesSchemes</key>
     <array>
         <string>youversion</string>
