@@ -1,5 +1,5 @@
 // Config.swift
 struct Config {
-    static let youtubeApiKey = "AIzaSyDR6uEwko-BHr181IaONJkT54mC5TLe6PA"
-    static let playlistId = "PLhCpkXHhayHCoBcxm_N32uuuEOEGK5dzV"
+    static let youtubeApiKey = "API_KEY"
+    static let playlistId = "PLAYLIST_ID"
 }

@@ -7,19 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0643AD3D2DAEFED400846BE4 /* RiverRougeCOGOPMembers.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 0643AD312DAEFED300846BE4 /* RiverRougeCOGOPMembers.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0669BEC62DA9BE17001D3E0E /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0669BEC52DA9BE17001D3E0E /* AVKit.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		0643AD3B2DAEFED400846BE4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 06122B7E2D9BB3E8000F0D74 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 0643AD302DAEFED300846BE4;
-			remoteInfo = RiverRougeCOGOPMembers;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		0643AD422DAEFED400846BE4 /* Embed App Clips */ = {
@@ -28,7 +17,6 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
 			dstSubfolderSpec = 16;
 			files = (
-				0643AD3D2DAEFED400846BE4 /* RiverRougeCOGOPMembers.app in Embed App Clips */,
 			);
 			name = "Embed App Clips";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -37,18 +25,11 @@
 
 /* Begin PBXFileReference section */
 		06122B862D9BB3E8000F0D74 /* RiverRougeCOGOP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RiverRougeCOGOP.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0643AD312DAEFED300846BE4 /* RiverRougeCOGOPMembers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RiverRougeCOGOPMembers.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0643AD312DAEFED300846BE4 /* RiverRougeCOGOPMembers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = RiverRougeCOGOPMembers.app; path = "/Users/hudsobre/Library/Mobile Documents/com~apple~CloudDocs/Projects/RiverRougeCOGOP/build/Debug-iphoneos/RiverRougeCOGOPMembers.app"; sourceTree = "<absolute>"; };
 		0669BEC52DA9BE17001D3E0E /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		0643AD412DAEFED400846BE4 /* Exceptions for "RiverRougeCOGOPMembers" folder in "RiverRougeCOGOPMembers" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 0643AD302DAEFED300846BE4 /* RiverRougeCOGOPMembers */;
-		};
 		0669BED12DA9C253001D3E0E /* Exceptions for "RiverRougeCOGOP" folder in "RiverRougeCOGOP" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -67,14 +48,6 @@
 			path = RiverRougeCOGOP;
 			sourceTree = "<group>";
 		};
-		0643AD322DAEFED300846BE4 /* RiverRougeCOGOPMembers */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				0643AD412DAEFED400846BE4 /* Exceptions for "RiverRougeCOGOPMembers" folder in "RiverRougeCOGOPMembers" target */,
-			);
-			path = RiverRougeCOGOPMembers;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,13 +59,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0643AD2E2DAEFED300846BE4 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -100,9 +66,9 @@
 			isa = PBXGroup;
 			children = (
 				06122B882D9BB3E8000F0D74 /* RiverRougeCOGOP */,
-				0643AD322DAEFED300846BE4 /* RiverRougeCOGOPMembers */,
 				0669BEC42DA9BE0A001D3E0E /* Frameworks */,
 				06122B872D9BB3E8000F0D74 /* Products */,
+				06B09C832DB091110010BFBE /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -110,7 +76,6 @@
 			isa = PBXGroup;
 			children = (
 				06122B862D9BB3E8000F0D74 /* RiverRougeCOGOP.app */,
-				0643AD312DAEFED300846BE4 /* RiverRougeCOGOPMembers.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -121,6 +86,14 @@
 				0669BEC52DA9BE17001D3E0E /* AVKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		06B09C832DB091110010BFBE /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				0643AD312DAEFED300846BE4 /* RiverRougeCOGOPMembers.app */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,7 +111,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				0643AD3C2DAEFED400846BE4 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				06122B882D9BB3E8000F0D74 /* RiverRougeCOGOP */,
@@ -149,28 +121,6 @@
 			productName = RiverRougeCOGOP;
 			productReference = 06122B862D9BB3E8000F0D74 /* RiverRougeCOGOP.app */;
 			productType = "com.apple.product-type.application";
-		};
-		0643AD302DAEFED300846BE4 /* RiverRougeCOGOPMembers */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 0643AD3E2DAEFED400846BE4 /* Build configuration list for PBXNativeTarget "RiverRougeCOGOPMembers" */;
-			buildPhases = (
-				0643AD2D2DAEFED300846BE4 /* Sources */,
-				0643AD2E2DAEFED300846BE4 /* Frameworks */,
-				0643AD2F2DAEFED300846BE4 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				0643AD322DAEFED300846BE4 /* RiverRougeCOGOPMembers */,
-			);
-			name = RiverRougeCOGOPMembers;
-			packageProductDependencies = (
-			);
-			productName = RiverRougeCOGOPMembers;
-			productReference = 0643AD312DAEFED300846BE4 /* RiverRougeCOGOPMembers.app */;
-			productType = "com.apple.product-type.application.on-demand-install-capable";
 		};
 /* End PBXNativeTarget section */
 
@@ -183,9 +133,6 @@
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					06122B852D9BB3E8000F0D74 = {
-						CreatedOnToolsVersion = 16.3;
-					};
-					0643AD302DAEFED300846BE4 = {
 						CreatedOnToolsVersion = 16.3;
 					};
 				};
@@ -207,20 +154,12 @@
 			projectRoot = "";
 			targets = (
 				06122B852D9BB3E8000F0D74 /* RiverRougeCOGOP */,
-				0643AD302DAEFED300846BE4 /* RiverRougeCOGOPMembers */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		06122B842D9BB3E8000F0D74 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		0643AD2F2DAEFED300846BE4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -237,22 +176,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		0643AD2D2DAEFED300846BE4 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		0643AD3C2DAEFED400846BE4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0643AD302DAEFED300846BE4 /* RiverRougeCOGOPMembers */;
-			targetProxy = 0643AD3B2DAEFED400846BE4 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		06122B8F2D9BB3EA000F0D74 /* Debug */ = {
@@ -381,6 +305,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -417,6 +342,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -448,70 +374,6 @@
 			};
 			name = Release;
 		};
-		0643AD3F2DAEFED400846BE4 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = RiverRougeCOGOPMembers/RiverRougeCOGOPMembers.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 85R775VYBS;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RiverRougeCOGOPMembers/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = RiverRougeCOGOP;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.RiverRougeCOGOP.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		0643AD402DAEFED400846BE4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = RiverRougeCOGOPMembers/RiverRougeCOGOPMembers.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 85R775VYBS;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RiverRougeCOGOPMembers/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = RiverRougeCOGOP;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.RiverRougeCOGOP.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -529,15 +391,6 @@
 			buildConfigurations = (
 				06122B922D9BB3EA000F0D74 /* Debug */,
 				06122B932D9BB3EA000F0D74 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		0643AD3E2DAEFED400846BE4 /* Build configuration list for PBXNativeTarget "RiverRougeCOGOPMembers" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				0643AD3F2DAEFED400846BE4 /* Debug */,
-				0643AD402DAEFED400846BE4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
