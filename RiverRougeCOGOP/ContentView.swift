@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var selectedFontSize: FontSizeOption = .medium
     @State private var showingBible = false
     @State private var selectedScriptureReference: String?
+    @State private var showingLocation = false
 
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
@@ -91,7 +92,7 @@ struct ContentView: View {
                         })
                         
                         GridButton(title: "Location", icon: "map.fill", gradient: selectedGradient, action: {
-                            openMaps(address: "41 Orchard St, River Rouge, MI 48218")
+                            showingLocation = true
                         })
                         
                         GridButton(title: "Giving", icon: "dollarsign.circle.fill", gradient: selectedGradient, action: {
@@ -139,6 +140,10 @@ struct ContentView: View {
                         BibleView(showingBible: $showingBible, initialSearch: selectedScriptureReference)
                             .presentationDetents([.large])
                     }
+                    .sheet(isPresented: $showingLocation) {
+                        LocationView()
+                            .presentationDetents([.large])
+                    }
                     Spacer()
 
                     // Inspired Scriptures Section
@@ -165,7 +170,7 @@ struct ContentView: View {
                             .font(selectedFontSize.fontForMain(horizontalSizeClass: horizontalSizeClass))
                             .foregroundColor(.white.opacity(0.9))
                             .multilineTextAlignment(.center)
-                            .lineLimit(2)
+                            .lineLimit(3)
                             .truncationMode(.tail)
                             .padding(.horizontal)
                             .padding(.top, 5)
@@ -178,10 +183,10 @@ struct ContentView: View {
                                 .foregroundColor(.yellow)
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal)
-                                .padding(.bottom, 5)
+                                .padding(.bottom, 10)
                         }
                     }
-                    .frame(maxWidth: .infinity, minHeight: 90)
+                    .frame(maxWidth: .infinity, minHeight: 125)
                     .background(selectedScriptureTheme.gradient)
                     .cornerRadius(15)
                     .shadow(radius: 10)

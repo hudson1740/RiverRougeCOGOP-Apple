@@ -81,7 +81,6 @@ struct BibleView: View {
     @State private var bookmarkedVerses: [String] = []
     @State private var showingBookmarks = false
     @State private var scrollToVerse: String?
-    @State private var shouldPerformInitialSearch = false
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     let initialSearch: String?
 
@@ -239,13 +238,7 @@ struct BibleView: View {
         .onAppear {
             loadHighlightsAndBookmarks()
             if let initial = initialSearch, !initial.isEmpty {
-                shouldPerformInitialSearch = true
-            }
-        }
-        .onChange(of: shouldPerformInitialSearch) { perform in
-            if perform {
-                handleInitialSearch(initialSearch!)
-                shouldPerformInitialSearch = false
+                handleInitialSearch(initial)
             }
         }
     }
@@ -280,7 +273,13 @@ struct BibleView: View {
         }
 
         let bookNameComponents = components.dropLast()
-        let bookName = bookNameComponents.joined(separator: " ").trimmingCharacters(in: .whitespaces)
+        var bookName = bookNameComponents.joined(separator: " ").trimmingCharacters(in: .whitespaces)
+        
+        // Handle special case for Psalms (singular/plural)
+        if bookName.lowercased() == "psalm" {
+            bookName = "Psalms"
+        }
+
         print("Parsed - Book: '\(bookName)', Chapter: '\(chapter)', Verse: '\(verse)'")
 
         if let book = books.first(where: { $0.name.lowercased() == bookName.lowercased() }) {
@@ -291,10 +290,12 @@ struct BibleView: View {
                 fetchVerses(book: book.apiName, chapter: chapter, highlightVerse: verse)
             } else {
                 print("Invalid chapter: \(chapter) for book \(book.name) (max: \(book.chapterCount))")
+                errorMessage = "Invalid chapter: \(chapter) for \(book.name)"
             }
         } else {
             print("Book not found: '\(bookName)'")
             print("Available books: \(books.map { $0.name.lowercased() })")
+            errorMessage = "Book not found: \(bookName)"
         }
     }
 
@@ -306,6 +307,7 @@ struct BibleView: View {
         guard let url = URL(string: urlString) else {
             errorMessage = "Invalid URL: \(urlString)"
             isLoading = false
+            print("Invalid URL: \(urlString)")
             return
         }
 
@@ -315,12 +317,12 @@ struct BibleView: View {
             DispatchQueue.main.async {
                 self.isLoading = false
                 if let error = error {
-                    self.errorMessage = "Error: \(error.localizedDescription)"
+                    self.errorMessage = "Error fetching verses: \(error.localizedDescription)"
                     print("Fetch Error: \(error.localizedDescription)")
                     return
                 }
                 guard let data = data else {
-                    self.errorMessage = "No data received"
+                    self.errorMessage = "No data received from API"
                     print("No data received")
                     return
                 }
@@ -362,7 +364,13 @@ struct BibleView: View {
         }
 
         let bookNameComponents = components.dropLast()
-        let bookName = bookNameComponents.joined(separator: " ").trimmingCharacters(in: .whitespaces)
+        var bookName = bookNameComponents.joined(separator: " ").trimmingCharacters(in: .whitespaces)
+        
+        // Handle special case for Psalms
+        if bookName.lowercased() == "psalm" {
+            bookName = "Psalms"
+        }
+
         print("Parsed - Book: '\(bookName)', Chapter: '\(chapter)', Verse: '\(verse)'")
 
         if let book = books.first(where: { $0.name.lowercased() == bookName.lowercased() }) {
@@ -374,9 +382,11 @@ struct BibleView: View {
                 searchText = ""
             } else {
                 print("Invalid chapter: \(chapter) for book \(book.name) (max: \(book.chapterCount))")
+                errorMessage = "Invalid chapter: \(chapter) for \(book.name)"
             }
         } else {
             print("Book not found: '\(bookName)'")
+            errorMessage = "Book not found: \(bookName)"
         }
     }
 
@@ -573,8 +583,10 @@ struct VerseListView: View {
             }
             .onAppear {
                 if let verseId = scrollToVerse {
-                    withAnimation {
-                        proxy.scrollTo(verseId, anchor: .top)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        withAnimation {
+                            proxy.scrollTo(verseId, anchor: .top)
+                        }
                     }
                 }
             }
