@@ -22,16 +22,9 @@
     },
     {
         "id": "4",
-        "title": "Good Friday Service",
-        "body": "Join our annual Good Friday Service",
-        "timeInfo": "April 18th",
-        "priority": 4
-    },
-    {
-        "id": "5",
         "title": "Great Lakes Regional Convention",
         "body": "Phillippe Performing Arts Center Marion, Indiana",
         "timeInfo": "June 27 - June 29",
-        "priority": 6
+        "priority": 4
     }
 ]
