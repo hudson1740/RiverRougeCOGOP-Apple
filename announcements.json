@@ -26,5 +26,12 @@
         "body": "Phillippe Performing Arts Center Marion, Indiana",
         "timeInfo": "June 27 - June 29",
         "priority": 4
+    },
+    {
+        "id": "5",
+        "title": "Youth Camp",
+        "body": "Please contact us for info",
+        "timeInfo": "July 1 - July 5",
+        "priority": 5
     }
 ]
