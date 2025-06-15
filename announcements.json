@@ -29,15 +29,8 @@
     },
     {
         "id": "5",
-        "title": "Woman's Conference",
-        "body": "",
-        "timeInfo": "May 30 - June 1st",
-        "priority": 5
-    },
-    {
-        "id": "6",
         "title": "Great Lakes Regional Convention",
-        "body": "Westland, Indiana ",
+        "body": "Phillippe Performing Arts Center Marion, Indiana",
         "timeInfo": "June 27 - June 29",
         "priority": 6
     }
